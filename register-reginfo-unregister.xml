@@ -119,7 +119,7 @@ NOTIFY for Reginfo (Network to UA)
   <recv request="NOTIFY">
   </recv>
 
- <send start_txn="notify">
+ <send>
       <![CDATA[
 
 SIP/2.0 200 OK
