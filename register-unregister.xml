@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<scenario name="register_client">
+<!--
+#############################################################
+REGISTER the client (UA to Network)
+#############################################################
+-->
+  <send retrans="500" start_txn="register" start_rtd="register">
+      <![CDATA[
+
+REGISTER sip:[field1] SIP/2.0
+User-Agent: SLICK IMS 4.0.0
+Allow: INVITE,ACK,OPTIONS,CANCEL,BYE,UPDATE,INFO,REFER,NOTIFY,MESSAGE,PRACK
+Supported: path
+Expires: 1800
+Authorization: Digest username="[field3]",realm="[field1]",nonce="",algorithm=MD5,uri="sip:ims.voiceblue.com",response="",qop=auth,nc=00000001,cnonce=""
+P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=9cc7a608a31d
+Contact: <sip:[field0]@[local_ip]:[local_port]>;q=1.00;+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.mmtel";+g.3gpp.smsip;video;+sip.instance="<urn:gsma:imei:35676506-815566-0>"
+From: <sip:[field0]@[field1]>;tag=[call_number]
+To: <sip:[field0]@[field1]>
+Call-ID: reg///[call_id]
+CSeq: 1 REGISTER
+Max-Forwards: 70
+Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]-reg;transport=[transport];rport
+Content-Length: 0
+
+      ]]>
+   </send>
+
+   <recv response="100" optional="true" response_txn="register">
+   </recv>
+   <recv response="200" optional="true" next="regdone" response_txn="register" rtd="register">
+     <!-- Extract Service-Route -->
+     <action>
+       <ereg regexp=".*" search_in="hdr" header="Service-Route" check_it="false" assign_to="7"/>
+     </action>
+   </recv>
+   <recv response="401" auth="true" response_txn="register">
+   </recv>
+
+   <send retrans="500" start_txn="register" start_rtd="register">
+      <![CDATA[
+
+REGISTER sip:[field1] SIP/2.0
+User-Agent: SLICK IMS 4.0.0
+Allow: INVITE,ACK,OPTIONS,CANCEL,BYE,UPDATE,INFO,REFER,NOTIFY,MESSAGE,PRACK
+Supported: path
+Expires: 1800
+[field2]
+P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=9cc7a608a31d
+Contact: <sip:[field0]@[local_ip]:[local_port]>;q=1.00;+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.mmtel";+g.3gpp.smsip;video;+sip.instance="<urn:gsma:imei:35676506-815566-0>"
+From: <sip:[field0]@[field1]>;tag=[call_number]
+To: <sip:[field0]@[field1]>
+Call-ID: reg///[call_id]
+CSeq: 2 REGISTER
+Max-Forwards: 70
+Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]-reg;transport=[transport];rport
+Content-Length: 0
+
+    ]]>
+   </send>
+
+   <recv response="100" optional="true" response_txn="register">
+   </recv>
+
+   <recv response="200" response_txn="register" rtd="register">
+     <!-- Extract Service-Route -->
+     <action>
+       <ereg regexp=".*" search_in="hdr" header="Service-Route" check_it="false" assign_to="7"/>
+     </action>
+  </recv> 
+  <label id="regdone"/>
+
+<!--
+#############################################################
+Un-REGISTER the client (UA to Network)
+#############################################################
+-->
+
+  <send retrans="500" start_txn="unregister" start_rtd="unregister">
+      <![CDATA[
+
+REGISTER sip:[field1] SIP/2.0
+User-Agent: SLICK IMS 4.0.0
+Allow: INVITE,ACK,OPTIONS,CANCEL,BYE,UPDATE,INFO,REFER,NOTIFY,MESSAGE,PRACK
+Supported: path
+Expires: 0
+Authorization: Digest username="[field3]",realm="[field1]",nonce="",algorithm=MD5,uri="sip:ims.voiceblue.com",response="",qop=auth,nc=00000001,cnonce=""
+P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=9cc7a608a31d
+Contact: <sip:[field0]@[local_ip]:[local_port]>;q=1.00;+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.mmtel";+g.3gpp.smsip;video;+sip.instance="<urn:gsma:imei:35676506-815566-0>"
+From: <sip:[field0]@[field1]>;tag=[call_number]
+To: <sip:[field0]@[field1]>
+Call-ID: reg///[call_id]
+CSeq: 1 REGISTER
+Max-Forwards: 70
+Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]-unreg;transport=[transport];rport
+Content-Length: 0
+
+      ]]>
+   </send>
+
+   <recv response="100" optional="true" response_txn="unregister">
+   </recv>
+   <recv response="200" optional="true" next="unregdone" response_txn="unregister" rtd="unregister">
+     <!-- Extract Service-Route -->
+     <action>
+       <ereg regexp=".*" search_in="hdr" header="Service-Route" check_it="false" assign_to="7"/>
+     </action>
+   </recv>
+   <recv response="401" auth="true" response_txn="unregister">
+   </recv>
+
+   <send retrans="500" start_txn="unregister" start_rtd="unregister">
+      <![CDATA[
+
+REGISTER sip:[field1] SIP/2.0
+User-Agent: SLICK IMS 4.0.0
+Allow: INVITE,ACK,OPTIONS,CANCEL,BYE,UPDATE,INFO,REFER,NOTIFY,MESSAGE,PRACK
+Supported: path
+Expires: 0
+[field2]
+P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=9cc7a608a31d
+Contact: <sip:[field0]@[local_ip]:[local_port]>;q=1.00;+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.mmtel";+g.3gpp.smsip;video;+sip.instance="<urn:gsma:imei:35676506-815566-0>"
+From: <sip:[field0]@[field1]>;tag=[call_number]
+To: <sip:[field0]@[field1]>
+Call-ID: reg///[call_id]
+CSeq: 2 REGISTER
+Max-Forwards: 70
+Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]-unreg;transport=[transport];rport
+Content-Length: 0
+
+    ]]>
+   </send>
+
+   <recv response="100" optional="true" response_txn="unregister">
+   </recv>
+
+   <recv response="200" response_txn="unregister" rtd="unregister">
+     <!-- Extract Service-Route -->
+     <action>
+       <ereg regexp=".*" search_in="hdr" header="Service-Route" check_it="false" assign_to="7"/>
+     </action>
+  </recv> 
+  <label id="unregdone"/>
+
+
+<!--
+ definition of the response time repartition table (unit is ms)   
+-->
+<ResponseTimeRepartition value="100, 200, 300, 400, 500, 600, 700, 800, 900, 1000"/>
+<!--
+ definition of the call length repartition table (unit is ms)     
+-->
+<CallLengthRepartition value="5000, 10000, 11000, 12000, 13000"/>
+</scenario>
