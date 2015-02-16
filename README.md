@@ -10,9 +10,9 @@ The tests consists of two parts: A scripts/utilities:
 * create_users.sh - a shell script for creating the according IMPI's, IMPU's and stuff in the HSS-Database (the database is vendor specific) as well as the include files for SIPP (which are needed to run the scenarios)
 
 The script needs two parameters:
-	* the number of accounts to create (defaults to 500.000)
-	* the IMS-Domain to use
-	* ./create_users.sh 10 imscore.org
+* the number of accounts to create (e.g. 100)
+* the IMS-Domain to use (e.g. imscore.org)
+* ecample call: ./create_users.sh 10 imscore.org
 
 As a result, you get two files:
 * clients.csv - the input file for SIPP
