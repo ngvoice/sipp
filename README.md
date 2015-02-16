@@ -29,4 +29,4 @@ Compiling SIPP
 
 Running the scenarios
 =======================
-./sipp <ip-of-pcscf> -sf ./register-unregister.xml -inf ./clients.csv -default_behaviors none -nd
+./sipp ip.of.pcscf -sf ./register-unregister.xml -inf ./clients.csv -default_behaviors none -nd -i local.ip
